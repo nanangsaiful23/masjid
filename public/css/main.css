@@ -1,0 +1,49 @@
+html{
+    display: block;
+}
+header{
+    background-color:white;
+    border-bottom:solid black;
+}
+.logo{
+    width: 50%;
+}
+header .btn{
+    border-radius: 0px;
+}
+header .btn:hover{
+    background-color: black;
+    color: white;
+}
+header .active{
+    background-color: rgb(167, 158, 158);
+    color: white;
+}
+.btn-input-data .btn{
+    margin: 10px;
+}
+.input-data{
+    margin:20px 0px;
+
+}
+.lihat-data{
+    background-color: white;
+    border: solid black;
+    border-radius: 3%;
+}
+.isi-data{
+    background-color: white;
+    border: solid black;
+    border-radius: 3%;
+}
+.row{
+    width: 100%;
+}
+footer{
+    border-top: solid black;
+    text-align: center;
+}
+.logo-footer{
+    width: 10%;
+}
+

@@ -1,0 +1,33 @@
+header{
+    background-color:white;
+    border-bottom:solid black;
+}
+
+.logo{
+    width: 30%;
+}
+footer{
+    border-top: solid black;
+    text-align: center;
+}
+@media print{
+    body, html{
+        margin-top: 0px !important;
+        padding-top: 0px !important;
+    }
+    header{
+        border-bottom:0.5px solid black;
+    }
+    footer{
+        border-top:0.5px solid black; font-size: 10px;
+    }
+    .print-data{
+        position:center; font-size: 10px;
+    }
+    .logo{
+        width:80%;
+    }
+    .print-data span{
+        float: left;
+    }
+}
