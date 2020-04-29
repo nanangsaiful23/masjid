@@ -52,7 +52,7 @@
                             <label>Jenis</label>
                             <input type="text" class="form-control" id="jenis" placeholder="zakat">
                             <label>Nominal</label>
-                            <input type="number" class="form-control" id="nominal" placeholder="0">
+                            <input type="text" class="form-control" id="nominal" placeholder="0" onkeyup="changeFormat()">
                         </div>
                         <input type="submit" class="btn" value="tambah"
                             onclick="event.preventDefault(); tambahDataTable()">
@@ -114,13 +114,23 @@
             $("#tambah-orang").prepend('<div class="form-inline"> <input type="text" class="form-control" id="nama-'+idx+'" placeholder="fulan"><button class="btn" id="btn-'+(parseInt(idx))+'" onclick="event.preventDefault(); tambahOrang('+(parseInt(idx)+1)+');"><i class="fa fa-plus-square"></i></button><div id="hapusnama-'+(parseInt(idx))+'"></div></div>');
 
         }
-        function hapusOrang(idn) {
+        function hapusOrang(idn)
+        {
             document.getElementById("hapusnama-"+(parseInt(idn))).remove();
             document.getElementById("nama-"+(parseInt(idn))).remove();
         }
-        function formatNumber(num) {
-                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+        function changeFormat() {
+            document.getElementById("nominal").value=formatNumber(document.getElementById("nominal").value);
         }
+        function formatNumber(num)
+        {
+                console.log("ini number");
+                console.log(num);
+                num=  num.toString().replace(/,/g,'');
+                console.log(num);
+                return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        }
+
         function tambahDataTable() {
             var result = "";
             idx+=1;
@@ -131,9 +141,9 @@
             while (index < idx) {
                 if(document.getElementById("nama-"+index)!= null ){
                     if (document.getElementById("nama-"+index).value!="" && document.getElementById("jenis").value!="" && document.getElementById("nominal").value!="") {
-                        result += "<tr><th scope='row'>"+count+"</th><td>"+document.getElementById("nama-"+index).value+"</td><td>"+document.getElementById("jenis").value+"</td><td>"+formatNumber(document.getElementById("nominal").value)+"</td><input type='hidden' value='"+document.getElementById("nama-"+index).value+"' name='nama[]'><input type='hidden' value='"+document.getElementById("jenis").value+"' name='jenis[]'><input type='hidden' value='"+document.getElementById("nominal").value+"' name='nominal[]'></tr>";
+                        result += "<tr><th scope='row'>"+count+"</th><td>"+document.getElementById("nama-"+index).value+"</td><td>"+document.getElementById("jenis").value+"</td><td>"+formatNumber(document.getElementById("nominal").value)+"</td><input type='hidden' value='"+document.getElementById("nama-"+index).value+"' name='nama[]'><input type='hidden' value='"+document.getElementById("jenis").value+"' name='jenis[]'><input type='hidden' value='"+parseInt(document.getElementById("nominal").value.replace(/,/g,''))+"' name='nominal[]'></tr>";
                         count++
-                        totalbayar+=parseInt(document.getElementById("nominal").value)
+                        totalbayar+=parseInt(document.getElementById("nominal").value.replace(/,/g,''))
                     }else{
                         komplet=false;
                         count=temptcount;
@@ -154,11 +164,7 @@
                 idx-=1;
                 alert("silahkan lengkapi data");
             }
-
         }
-
-
-
 
     </script>
 </body>

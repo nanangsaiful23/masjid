@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionExport;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Model\Transaction;
 use Illuminate\Http\Response;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
 {
@@ -36,6 +38,16 @@ class TransactionController extends Controller
                                 ->get();
         return view("lihatdata",compact("ringkasan"));
     }
+    public function index()
+	{
+		$siswa = Transaction::all();
+		return view('siswa',['siswa'=>$siswa]);
+	}
+
+	public function export_excel()
+	{
+		return Excel::download(new TransactionExport, 'transaction.xlsx');
+	}
     function downloadmuzakki(){
 
         $table = Transaction::all();

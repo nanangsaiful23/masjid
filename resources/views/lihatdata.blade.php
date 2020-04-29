@@ -59,7 +59,7 @@
                 </tbody>
 
             </table>
-            <a href="/all-tweets-csv" class="btn btn-primary">Export data muzakki</a>
+            <a href="/transaction/export_excel" class="btn btn-primary">Export data muzakki</a>
         </div>
 
     </div>

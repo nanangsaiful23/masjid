@@ -7,6 +7,7 @@
     <title>Masjid Nurul huda</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='print,screen' href="{{ ('/css/print.css') }}">
+    <meta http-equiv="refresh" content="10;url={{ url('') }}" />
     <!-- <link rel="stylesheet" href="bootstrap-4.0.0/dist/css/bootstrap.min.css"> -->
     <!-- <script src='main.js'></script> -->
 </head>
@@ -57,8 +58,9 @@
     <script>
         $(document).ready(function(){
             window.print();
+            window.print();
             // setTimeout(function () { window.close(); }, 100);
-            window.location.href = "http://localhost:8000/";
+            // window.location.href = "http://localhost:8000/";
             // window.location = ;
         })
     </script>
