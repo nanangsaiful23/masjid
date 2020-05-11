@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SumTransactionExport;
 use App\Exports\TransactionExport;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -41,13 +42,17 @@ class TransactionController extends Controller
     public function index()
 	{
 		$siswa = Transaction::all();
-		return view('siswa',['siswa'=>$siswa]);
+		return view('transaction',['transaction'=>$siswa]);
 	}
 
 	public function export_excel()
 	{
-		return Excel::download(new TransactionExport, 'transaction.xlsx');
-	}
+		return Excel::download(new TransactionExport, 'Data_Muzakki.xlsx');
+    }
+    public function export_sumdata()
+    {
+        return Excel::download(new SumTransactionExport,"Dataringkasanmuzakki.xlsx");
+    }
     function downloadmuzakki(){
 
         $table = Transaction::all();

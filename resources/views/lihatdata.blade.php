@@ -59,7 +59,8 @@
                 </tbody>
 
             </table>
-            <a href="/transaction/export_excel" class="btn btn-primary">Export data muzakki</a>
+            <a href="/transaction/export_excel" class="btn">Download data muzakki</a>
+            <a href="/export_sumdata" class="btn">Download ringkasan data muzakki</a>
         </div>
 
     </div>
@@ -71,5 +72,4 @@
     <script>
     </script>
 </body>
-
 </html>
