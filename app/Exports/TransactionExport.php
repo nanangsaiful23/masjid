@@ -19,7 +19,7 @@ class TransactionExport implements FromCollection ,WithHeadings,WithTitle
     }
     public function headings(): array
     {
-        return ["no","Nama", "Jenis", "Nominal"];
+        return ["no","Nama", "Jenis","Jenis Pembayaran", "Nominal"];
     }
     public function title(): string
     {

@@ -49,14 +49,25 @@
                         <td>{{$i++}}</td>
                         <td>{{$item->jenis}} </td>
                         <td>{{$item->jenis_pembayaran}}</td>
+                        @if ($item->jenis_pembayaran=="Uang")
                         <td style="text-align: right">{{number_format( $item->total,0,",",".")}}</td>
                         @php
+                        $totaluang+=$item->total;
+                        @endphp
+                        @elseif($item->jenis_pembayaran=="Beras")
+                        <td style="text-align: right">{{number_format( $item->total,1,",",".")}}</td>
+                        @php
+                        $totalberas+=$item->total;
+                        @endphp
+                        @endif
+                        {{-- @php
                             if ($item->jenis_pembayaran=="Uang") {
+
                                 $totaluang+=$item->total;
                             }else if($item->jenis_pembayaran=="Beras"){
                                 $totalberas+=$item->total;
                             }
-                        @endphp
+                        @endphp --}}
                     </tr>
                     @endforeach
                     <tr>
@@ -65,7 +76,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">Total Pemasukan Beras</td>
-                        <td style="text-align: right">{{number_format( $totalberas,0,",",".")}} Kg</td>
+                        <td style="text-align: right">{{number_format( $totalberas,1,",",".")}} Kg</td>
                     </tr>
                 </tbody>
 

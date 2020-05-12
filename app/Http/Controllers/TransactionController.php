@@ -33,7 +33,7 @@ class TransactionController extends Controller
                 }
 
             }
-            $totaluang=number_format($totaluang,1,",",".");
+            $totaluang=number_format($totaluang,0,",",".");
             $totalberas=number_format($totalberas,1,",",".");
             return view("print_nota",compact("transactions","totaluang","totalberas"));
         } catch (\Throwable $th) {

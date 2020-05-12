@@ -21,9 +21,9 @@ class TotaltransactionExport implements FromCollection, WithHeadings, WithTitle
         $totalringkasan=Transaction::groupBy('jenis_pembayaran')
                                     ->selectRaw('jenis_pembayaran ,sum(nominal) as total')
                                     ->get();
-        $totalringkasan[0]->jenis_pembayaran ="Total " . $totalringkasan[0]->jenis_pembayaran;
-        $totalringkasan[1]->jenis_pembayaran ="Total " . $totalringkasan[1]->jenis_pembayaran;
-        $totalringkasan[2]->jenis_pembayaran ="Total " . $totalringkasan[2]->jenis_pembayaran;
+        for ($i=0 ; $i < sizeof($totalringkasan)  ; $i++ ) {
+            $totalringkasan[$i]->jenis_pembayaran ="Total " . $totalringkasan[$i]->jenis_pembayaran;
+        }
         $ringkasan = $ringkasan->toBase()->merge($totalringkasan);
         return  $ringkasan;
     }
