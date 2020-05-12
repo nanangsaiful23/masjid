@@ -14,7 +14,7 @@ class Transaction extends Model
      * @var array
      */
     protected $fillable = [
-        'nama', 'jenis', 'nominal',
+        'nama', 'jenis', 'jenis_pembayaran','nominal',
     ];
 
     /**

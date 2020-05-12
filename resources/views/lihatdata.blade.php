@@ -31,30 +31,41 @@
             <table class=" table table-bordered">
                 <thead>
                     <tr>
-                        <td>#</td>
-                        <td>Jenis</td>
-                        <td>Total</td>
+                        <th>#</th>
+                        <th>Jenis</th>
+                        <th>Jeni Pembayaran</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     @php
                     $i=1;
-                    $totalpemasukan=0;
+                    $totaluang=0;
+                    $totalberas=0;
                     @endphp
                     @foreach ($ringkasan as $item)
                     <tr>
                         <td>{{$i++}}</td>
                         <td>{{$item->jenis}} </td>
-                        <td>{{number_format( $item->total,0,",",".")}}</td>
+                        <td>{{$item->jenis_pembayaran}}</td>
+                        <td style="text-align: right">{{number_format( $item->total,0,",",".")}}</td>
                         @php
-                            $totalpemasukan+=$item->total
+                            if ($item->jenis_pembayaran=="Uang") {
+                                $totaluang+=$item->total;
+                            }else if($item->jenis_pembayaran=="Beras"){
+                                $totalberas+=$item->total;
+                            }
                         @endphp
                     </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2">Total Pemasukan</td>
-                        <td>{{number_format( $totalpemasukan,0,",",".")}}</td>
+                        <td colspan="3">Total Pemasukan Uang</td>
+                        <td style="text-align: right">Rp{{number_format( $totaluang,0,",",".")}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Total Pemasukan Beras</td>
+                        <td style="text-align: right">{{number_format( $totalberas,0,",",".")}} Kg</td>
                     </tr>
                 </tbody>
 

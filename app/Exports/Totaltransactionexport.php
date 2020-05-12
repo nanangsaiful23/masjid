@@ -15,18 +15,21 @@ class TotaltransactionExport implements FromCollection, WithHeadings, WithTitle
      */
     public function collection()
     {
-        $ringkasan = Transaction::groupBy('jenis')
-            ->selectRaw('jenis, sum(nominal) as total')
+        $ringkasan = Transaction::groupBy('jenis','jenis_pembayaran')
+            ->selectRaw('jenis, jenis_pembayaran ,sum(nominal) as total')
             ->get();
-        $totalringkasan=Transaction::selectRaw('sum(nominal) as jenis,sum(nominal) as total')
-                        ->get();
-        $totalringkasan[0]->jenis="TOTAL";
+        $totalringkasan=Transaction::groupBy('jenis_pembayaran')
+                                    ->selectRaw('jenis_pembayaran ,sum(nominal) as total')
+                                    ->get();
+        $totalringkasan[0]->jenis_pembayaran ="Total " . $totalringkasan[0]->jenis_pembayaran;
+        $totalringkasan[1]->jenis_pembayaran ="Total " . $totalringkasan[1]->jenis_pembayaran;
+        $totalringkasan[2]->jenis_pembayaran ="Total " . $totalringkasan[2]->jenis_pembayaran;
         $ringkasan = $ringkasan->toBase()->merge($totalringkasan);
         return  $ringkasan;
     }
     public function headings(): array
     {
-        return [ "Jenis", "Nominal"];
+        return [ "Jenis","Jenis Pembayaran", "Nominal"];
     }
     public function title(): string
     {

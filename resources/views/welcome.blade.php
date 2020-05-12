@@ -29,13 +29,16 @@
     <div class="input-data">
         <div class="container">
             <div class="row">
-                <div class="isi-data col-sm-8 col-8">
+                <div class="isi-data col-sm-7 col-7">
                     <div class="tombol">
-                        <button class="btn" onclick="kirimData('Zakat Fitrah','30000')"> Zakat Fitrah</button>
-                        <button class="btn" onclick="kirimData('Zakat Mal','')"> Zakat Mal</button>
-                        <button class="btn" onclick="kirimData('Fidyah','')"> Fidyah</button>
-                        <button class="btn" onclick="kirimData('Infaq','')"> infaq</button>
-                        <button class="btn"> Lain-lain</button>
+                        <button class="btn" onclick="kirimData('Zakat Fitrah','Uang','25,000')"> Zakat Fitrah
+                            Uang</button>
+                        <button class="btn" onclick="kirimData('Zakat Fitrah','Beras','2.5')"> Zakat Fitrah
+                            Beras</button>
+                        <button class="btn" onclick="kirimData('Zakat Mal','Uang','')"> Zakat Mal</button>
+                        <button class="btn" onclick="kirimData('Fidyah','Uang','')"> Fidyah</button>
+                        <button class="btn" onclick="kirimData('Infaq','Uang','')"> infaq</button>
+                        <button class="btn"> lain</button>
                     </div>
                     <div class="form-data">
                         <div class="form-group">
@@ -51,14 +54,17 @@
                             </div>
                             <label>Jenis</label>
                             <input type="text" class="form-control" id="jenis" placeholder="zakat">
+                            <label>Jenis Pembayaran</label>
+                            <input type="text" class="form-control" id="jenis_pembayaran" placeholder="Beras/Uang">
                             <label>Nominal</label>
-                            <input type="text" class="form-control" id="nominal" placeholder="0" onkeyup="changeFormat()">
+                            <input type="text" class="form-control" id="nominal" placeholder="0"
+                                onkeyup="changeFormat()">
                         </div>
                         <input type="submit" class="btn" value="tambah"
                             onclick="event.preventDefault(); tambahDataTable()">
                     </div>
                 </div>
-                <div class="lihat-data col-sm-4 col-4">
+                <div class="lihat-data col-sm-5 col-5">
                     <div class="tabel">
                         <form method="POST" action={{ route('transaksi') }}>
                             <table class="table">
@@ -67,6 +73,7 @@
                                         <th scope="col">#</th>
                                         <th scope="col">nama</th>
                                         <th scope="col">jenis</th>
+                                        <th scope="col">Jenis Pembayaran</th>
                                         <th scope="col">nominal</th>
                                     </tr>
                                 </thead>
@@ -81,8 +88,9 @@
                                 </tbody>
                             </table>
                             {{ csrf_field() }}
-                            <span>Total :</span><span id="totalbayar">Rp.0</span>
-                            <br>
+                            <div style="text-align: right">
+                                <span>Total:</span><span id="total">-</span>
+                            </div>
                             <button class="btn" type="submit" id="bayar">Bayar </button>
                         </form>
                     </div>
@@ -97,12 +105,14 @@
     </footer>
     <script src="{{('/jquery-3.4.1.min.js')}}"></script>
     <script>
-        var total_before = 1;
+        var index_before = 1;
         var idx=1;
         var count=1;
-        var totalbayar=0;
-        function kirimData(jenis,nominal) {
+        var totaluang=0;
+        var totalberas=0;
+        function kirimData(jenis,JenisBayar,nominal) {
             document.getElementById("jenis").value=jenis;
+            document.getElementById("jenis_pembayaran").value=JenisBayar;
             document.getElementById("nominal").value=nominal;
         }
         function tambahOrang() {
@@ -124,42 +134,52 @@
         }
         function formatNumber(num)
         {
-                console.log("ini number");
-                console.log(num);
                 num=  num.toString().replace(/,/g,'');
-                console.log(num);
                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
         }
 
         function tambahDataTable() {
             var result = "";
             idx+=1;
-            index=total_before;
+            index=index_before;
             komplet=true;
             temptcount=count;
-            temptotalbayar=totalbayar;
+            temptotaluang=totaluang;
+            temptotalberas=totalberas;
             while (index < idx) {
                 if(document.getElementById("nama-"+index)!= null ){
                     if (document.getElementById("nama-"+index).value!="" && document.getElementById("jenis").value!="" && document.getElementById("nominal").value!="") {
-                        result += "<tr><th scope='row'>"+count+"</th><td>"+document.getElementById("nama-"+index).value+"</td><td>"+document.getElementById("jenis").value+"</td><td>"+formatNumber(document.getElementById("nominal").value)+"</td><input type='hidden' value='"+document.getElementById("nama-"+index).value+"' name='nama[]'><input type='hidden' value='"+document.getElementById("jenis").value+"' name='jenis[]'><input type='hidden' value='"+parseInt(document.getElementById("nominal").value.replace(/,/g,''))+"' name='nominal[]'></tr>";
+                        result += "<tr><th scope='row'>"+count+"</th><td>"+document.getElementById("nama-"+index).value+"</td><td>"+document.getElementById("jenis").value+"</td><td>"+document.getElementById("jenis_pembayaran").value+"</td><td style='text-align:right;'>"+formatNumber(document.getElementById("nominal").value)+"</td><input type='hidden' value='"+document.getElementById("nama-"+index).value+"' name='nama[]'><input type='hidden' value='"+document.getElementById("jenis").value+"' name='jenis[]'><input type='hidden' value='"+document.getElementById("jenis_pembayaran").value+"' name='jenis_pembayaran[]'><input type='hidden' value='"+parseFloat(document.getElementById("nominal").value.replace(/,/g,''))+"' name='nominal[]'></tr>";
                         count++
-                        totalbayar+=parseInt(document.getElementById("nominal").value.replace(/,/g,''))
+                        console.log(document.getElementById("jenis_pembayaran"));
+                        if(document.getElementById("jenis_pembayaran").value=="Uang"){
+                            totaluang+=parseFloat(document.getElementById("nominal").value.replace(/,/g,''))
+                        }else if(document.getElementById("jenis_pembayaran").value=="Beras"){
+                            console.log("ini masuk")
+                            totalberas+=parseFloat(document.getElementById("nominal").value.replace(/,/g,''))
+                        }
                     }else{
                         komplet=false;
                         count=temptcount;
-                        totalbayar=temptotalbayar;
+                        totaluang=temptotaluang;
+                        totalberas=temptotalberas;
                     }
                 }
                 index++;
             }
             if(komplet){
-
                 $("#data-table").append(result);
                 document.getElementById("tambah-orang").innerHTML='<div class="form-inline"> <input type="text" class="form-control" id="nama-'+idx+'" placeholder="fulan"><button class="btn" id="btn-'+(parseInt(idx))+'" onclick="event.preventDefault(); tambahOrang('+(parseInt(idx)+1)+');">+</button><div id="hapusnama-'+(parseInt(idx))+'"></div></div>';
                 document.getElementById("jenis").value="";
                 document.getElementById("nominal").value="";
-                document.getElementById("totalbayar").innerHTML="<span id='totalbayar'>Rp"+formatNumber(totalbayar)+"</span>";
-                total_before=idx;
+                if ((totaluang!=0) && (totalberas!=0)) {
+                    document.getElementById("total").innerHTML="<span id='total'>Uang Rp"+formatNumber(totaluang)+" <br>Beras "+formatNumber(totalberas)+"Kg </span>";
+                }else if(totaluang!=0){
+                    document.getElementById("total").innerHTML="<span id='total'>Rp"+formatNumber(totaluang)+"</span>";
+                }else if(totalberas!=0){
+                    document.getElementById("total").innerHTML="<span id='total'>"+formatNumber(totalberas)+" Kg</span>";
+                }
+                index_before=idx;
             }else{
                 idx-=1;
                 alert("silahkan lengkapi data");

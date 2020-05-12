@@ -19,6 +19,8 @@ class CreateTransactionsTable extends Migration
                   ->nullable();
             $table->string("jenis")
                   ->nullable();
+            $table->string("jenis_pembayaran")
+                  ->nullable();
             $table->string("nominal")
                   ->nullable();
             $table->softDeletes();

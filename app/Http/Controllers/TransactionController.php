@@ -18,24 +18,32 @@ class TransactionController extends Controller
             $data= $request->input();
             // dd($data);die;
             $transactions=[];
-            $totalbayar=0;
+            $totaluang=0;
+            $totalberas=0;
             for ($i=0; $i < sizeof($data["nama"]); $i++) {
                 $temp["nama"]=$data["nama"][$i];
                 $temp["jenis"]=$data["jenis"][$i];
+                $temp["jenis_pembayaran"]=$data["jenis_pembayaran"][$i];
                 $temp["nominal"]=$data["nominal"][$i];
                 $transactions[$i]=Transaction::create($temp);
-                $totalbayar+=$data["nominal"][$i];
+                if ($temp["jenis_pembayaran"]=="Uang") {
+                    $totaluang+=$data["nominal"][$i];
+                }else if($temp["jenis_pembayaran"]=="Beras"){
+                    $totalberas+=$data["nominal"][$i];
+                }
+
             }
-            $totalbayar=number_format($totalbayar,0,",",".");
-            return view("print_nota",compact("transactions","totalbayar"));
+            $totaluang=number_format($totaluang,1,",",".");
+            $totalberas=number_format($totalberas,1,",",".");
+            return view("print_nota",compact("transactions","totaluang","totalberas"));
         } catch (\Throwable $th) {
             //throw $th;
         }
     }
     public function lihat()
     {
-        $ringkasan=Transaction::groupBy('jenis')
-                                ->selectRaw('jenis, sum(nominal) as total')
+        $ringkasan=Transaction::groupBy('jenis','jenis_pembayaran')
+                                ->selectRaw('jenis, sum(nominal) as total, jenis_pembayaran')
                                 ->get();
         return view("lihatdata",compact("ringkasan"));
     }

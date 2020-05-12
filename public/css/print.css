@@ -30,4 +30,7 @@ footer{
     .print-data span{
         float: left;
     }
+    .totalnota{
+        position: right;
+    }
 }
