@@ -36,9 +36,9 @@ header .active{
     border: solid black;
     border-radius: 3%;
 }
-.row{
+/*.row{
     width: 100%;
-}
+}*/
 footer{
     border-top: solid black;
     text-align: center;

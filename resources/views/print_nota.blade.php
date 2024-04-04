@@ -26,26 +26,25 @@
                         <th scope="col">#</th>
                         <th scope="col">nama</th>
                         <th scope="col">jenis</th>
-                        <th scope="col">jenis pembayaran</th>
+                        <!-- <th scope="col">jenis pembayaran</th> -->
                         <th scope="col">nominal</th>
                     </tr>
                 </thead>
                 <tbody id="data-table">
                     @php
-                    $j=1
+                        $j=1
                     @endphp
-                    @foreach ($transactions as $transaction)
+                    @foreach ($transaction->TransactionDetail as $detail)
                     <tr>
                         <th scope="row">{{$j++}}</th>
-                        <td>{{$transaction->nama}}</td>
-                        <td>{{$transaction->jenis}}</td>
-                        <td style="text-align: center">{{$transaction->jenis_pembayaran}}</td>
-                        @if ($transaction->jenis_pembayaran=="Uang")
-                        <td style="text-align: right;">{{number_format($transaction->nominal,0,',','.')}}</td>
-                        @elseif($transaction->jenis_pembayaran=="Beras")
-                        <td style="text-align: right;">{{number_format($transaction->nominal,1,',','.')}}</td>
+                        <td>{{$detail->muzakki->name}}</td>
+                        <td>{{$detail->zakat->name}}</td>
+                        <!-- <td style="text-align: center">{{$detail->zakat->type}}</td> -->
+                        @if ($detail->zakat->type=="Uang")
+                        <td style="text-align: right;">{{number_format($detail->nominal,0,',','.')}}</td>
+                        @elseif($detail->zakat->type=="Beras")
+                        <td style="text-align: right;">{{number_format($detail->nominal,1,',','.')}}</td>
                         @endif
-
                     </tr>
                     @endforeach
                 </tbody>
@@ -54,15 +53,16 @@
         <br>
         <div class="totalnota" >
             <span>Total :</span><span id="totalbayar">
-                @if ($totaluang!=0 && $totalberas!=0)
-                    Uang  Rp{{$totaluang}} <br> Beras {{$totalberas}} Kg
+                @if($totaluang!=0 && $totalberas!=0)
+                    Uang Rp{{$totaluang}} <br> Beras {{$totalberas}} Kg
                 @elseif($totaluang!=0)
-                    Uang  Rp{{$totaluang}}
+                    Uang Rp{{$totaluang}}
                 @else
                 Beras {{$totalberas}} Kg
                 @endif
                 </span>
                 <br>
+                {{ date('d F Y H:i:s', strtotime($transaction->created_at)) }} - ID: {{ $transaction->id }}
                 <br>
                 <br>
         </div>
@@ -89,7 +89,7 @@
                         <th scope="col">#</th>
                         <th scope="col">nama</th>
                         <th scope="col">jenis</th>
-                        <th scope="col">jenis pembayaran</th>
+                        <!-- <th scope="col">jenis pembayaran</th> -->
                         <th scope="col">nominal</th>
                     </tr>
                 </thead>
@@ -97,18 +97,17 @@
                     @php
                     $j=1
                     @endphp
-                    @foreach ($transactions as $transaction)
+                    @foreach ($transaction->TransactionDetail as $detail)
                     <tr>
                         <th scope="row">{{$j++}}</th>
-                        <td>{{$transaction->nama}}</td>
-                        <td>{{$transaction->jenis}}</td>
-                        <td style="text-align: center">{{$transaction->jenis_pembayaran}}</td>
-                        @if ($transaction->jenis_pembayaran=="Uang")
-                        <td style="text-align: right;">{{number_format($transaction->nominal,0,',','.')}}</td>
-                        @elseif($transaction->jenis_pembayaran=="Beras")
-                        <td style="text-align: right;">{{number_format($transaction->nominal,1,',','.')}}</td>
+                        <td>{{$detail->muzakki->name}}</td>
+                        <td>{{$detail->zakat->name}}</td>
+                        <!-- <td style="text-align: center">{{$detail->zakat->type}}</td> -->
+                        @if ($detail->zakat->type=="Uang")
+                        <td style="text-align: right;">{{number_format($detail->nominal,0,',','.')}}</td>
+                        @elseif($detail->zakat->type=="Beras")
+                        <td style="text-align: right;">{{number_format($detail->nominal,1,',','.')}}</td>
                         @endif
-
                     </tr>
                     @endforeach
                 </tbody>
@@ -126,6 +125,7 @@
                 @endif
                 </span>
                 <br>
+                {{ date('d F Y H:i:s', strtotime($transaction->created_at)) }} - ID: {{ $transaction->id }}
                 <br>
                 <br>
         </div>

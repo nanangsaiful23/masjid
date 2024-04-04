@@ -6,61 +6,97 @@ use App\Exports\SumTransactionExport;
 use App\Exports\TransactionExport;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Model\Transaction;
 use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
+use App\Model\Muzakki;
+use App\Model\Transaction;
+use App\Model\TransactionDetail;
+use App\Model\Zakat;
 
 class TransactionController extends Controller
 {
+    public function index()
+    {
+        $transactions = Transaction::all();
+
+        return view('transaction', compact('transactions'));
+    }
+
     public function tambah(Request $request)
     {
-        try {
-            $data= $request->input();
-            // dd($data);die;
-            $transactions=[];
-            $totaluang=0;
-            $totalberas=0;
-            for ($i=0; $i < sizeof($data["nama"]); $i++) {
-                $temp["nama"]=$data["nama"][$i];
-                $temp["jenis"]=$data["jenis"][$i];
-                $temp["jenis_pembayaran"]=$data["jenis_pembayaran"][$i];
-                $temp["nominal"]=$data["nominal"][$i];
-                $transactions[$i]=Transaction::create($temp);
-                if ($temp["jenis_pembayaran"]=="Uang") {
-                    $totaluang+=$data["nominal"][$i];
-                }else if($temp["jenis_pembayaran"]=="Beras"){
-                    $totalberas+=$data["nominal"][$i];
-                }
+        $data= $request->input();
 
+        $data_transaction['total_money'] = $request->total_uang;
+        $data_transaction['total_rice'] = $request->total_beras;
+        $transaction = Transaction::create($data_transaction);
+            
+        $data_transaction_detail['transaction_id'] = $transaction->id;
+
+        for ($i = 0; $i < sizeof($data["nama"]); $i++) 
+        {
+            $muzakki = Muzakki::where('name', $data['nama'][$i])->first();
+
+            if($muzakki == null)
+            {
+                $data_muzakki['name'] = $data['nama'][$i];
+
+                $muzakki = Muzakki::create($data_muzakki);
             }
-            $totaluang=number_format($totaluang,0,",",".");
-            $totalberas=number_format($totalberas,1,",",".");
-            return view("print_nota",compact("transactions","totaluang","totalberas"));
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-    }
-    public function lihat()
-    {
-        $ringkasan=Transaction::groupBy('jenis','jenis_pembayaran')
-                                ->selectRaw('jenis, sum(nominal) as total, jenis_pembayaran')
-                                ->get();
-        return view("lihatdata",compact("ringkasan"));
-    }
-    public function index()
-	{
-		$siswa = Transaction::all();
-		return view('transaction',['transaction'=>$siswa]);
-	}
+            
+            $zakat = Zakat::where('name', $data['jenis'][$i])->first();
+           
+            $data_transaction_detail['muzakki_id'] = $muzakki->id;
+            $data_transaction_detail['zakat_id'] = $zakat->id;
+            $data_transaction_detail['nominal'] = $data['nominal'][$i];
 
-	public function export_excel()
-	{
-		return Excel::download(new TransactionExport, 'Data_Muzakki.xlsx');
+            $transaction_detail = TransactionDetail::create($data_transaction_detail);
+        }
+
+        $totaluang  = number_format($request->total_uang,0,",",".");
+        $totalberas = number_format($request->total_beras,1,",",".");
+
+        return view("print_nota", compact("transaction", "totaluang", "totalberas"));
     }
-    public function export_sumdata()
+
+    public function lihat($start_date, $end_date, $pagination)
     {
-        return Excel::download(new SumTransactionExport,"Dataringkasanmuzakki.xlsx");
+        $zakats = Zakat::leftjoin('transaction_details', function($join) use($start_date, $end_date) {
+                            $join->on('transaction_details.zakat_id', '=', 'zakats.id')
+                                 ->whereDate('transaction_details.created_at', '>=', $start_date)
+                                 ->whereDate('transaction_details.created_at', '<=', $end_date); })
+                       ->select('zakats.name', DB::raw('SUM(transaction_details.nominal) as nominal'), 'zakats.type')
+                       ->groupBy('zakats.name', 'zakats.type')
+                       ->get();
+
+        if($pagination == 'all')
+        {
+            $transactions = Transaction::whereDate('created_at', '>=', $start_date)
+                                    ->whereDate('created_at', '<=', $end_date)
+                                    ->get();
+        }
+        else
+        {
+            $transactions = Transaction::whereDate('created_at', '>=', $start_date)
+                                    ->whereDate('created_at', '<=', $end_date)
+                                    ->paginate($pagination);
+        }
+        return view("lihatdata",compact('zakats', "transactions", "start_date", "end_date", "pagination"));
     }
+
+	public function export_excel($start_date,$end_date)
+	{
+		return Excel::download(new TransactionExport($start_date,$end_date), 'Data_Muzakki.xlsx');
+    }
+
+    public function export_sumdata($start_date,$end_date)
+    {
+        return Excel::download(new SumTransactionExport($start_date,$end_date),"Dataringkasanmuzakki.xlsx");
+    }
+
     function downloadmuzakki(){
 
         $table = Transaction::all();
@@ -79,5 +115,65 @@ class TransactionController extends Controller
         );
 
         return response()->download($filename, 'data_muzakki.csv', $headers);
+    }
+
+    public function import(Request $request)
+    {
+        if($request->hasFile('xlsx'))
+        {
+            $file = $request->file('xlsx')->store('datas');
+        }
+        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($file);
+        $items = Excel::toArray(function($reader) {}, $path);
+
+        foreach ($items[0] as $item)
+        {
+            $data['nama'] = $item[0];
+            $data['jenis'] = $item[1];
+            $data['jenis_pembayaran'] = $item[2];
+            $data['nominal'] = $item[3];
+            $data['created_at'] = date('Y-m-d', strtotime('2020-05-19'));
+            $data['updated_at'] = date('Y-m-d', strtotime('2020-05-19'));
+
+            Transaction::create($data);
+        }
+
+        File::delete($path);
+
+        return redirect('/laporan/'. date("Y-m-d") . '/' . date("Y-m-d") . '/20');
+    }
+
+    public function importMuzakki(Request $request)
+    {
+        if($request->hasFile('xlsx'))
+        {
+            $file = $request->file('xlsx')->store('datas');
+        }
+        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($file);
+        $items = Excel::toArray(function($reader) {}, $path);
+
+        foreach ($items[0] as $item)
+        {
+            $data['name'] = $item[0];
+
+            $muzakki = Muzakki::where('name', $data['name'])->first();
+
+            if($muzakki == null)
+                Muzakki::create($data);
+        }
+
+        File::delete($path);
+
+        return redirect('/laporan/'. date("Y-m-d") . '/' . date("Y-m-d") . '/20');
+    }
+
+    public function print($transaction_id)
+    {
+        $transaction = Transaction::find($transaction_id);
+
+        $totaluang  = number_format($transaction->total_money,0,",",".");
+        $totalberas = number_format($transaction->total_rice,1,",",".");
+
+        return view("print_nota", compact("transaction", "totaluang", "totalberas"));
     }
 }
