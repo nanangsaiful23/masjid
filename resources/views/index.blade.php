@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Masjid Nurul huda</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href="{{ ('/css/main.css') }}">
+    <link rel='stylesheet' type='text/css' media='screen' href="{{asset('/css/main.css') }}">
     <link rel="stylesheet" href="{{asset('assets/bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{asset('assets/bower_components/font-awesome/css/font-awesome.min.css')}}">
@@ -37,7 +37,7 @@
     <header>
         <div class="row">
             <div class="header-logo col-sm-3">
-                <img src="{{('/aset/logo.png')}}" alt="" class="logo">
+                <img src="{{asset('/aset/logo.png')}}" alt="" class="logo">
             </div>
             <div class="header-right offset-6 col-sm-3">
                 <a href="{{ url('') }}" class="btn active">Transaksi</a>
