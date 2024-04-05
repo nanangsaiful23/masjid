@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Exports\SumTransactionExport;
 use App\Exports\TransactionExport;
@@ -19,6 +19,11 @@ use App\Model\Zakat;
 
 class TransactionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
     public function index()
     {
         $transactions = Transaction::all();
