@@ -259,13 +259,13 @@
 
     function changeDate()
     {
-      window.location = window.location.origin + '/laporan/' + $("#datepicker").val() + '/' + $("#datepicker2").val() + '/{{ $pagination }}';
+      window.location = window.location.origin + '/admin/laporan/' + $("#datepicker").val() + '/' + $("#datepicker2").val() + '/{{ $pagination }}';
     }
 
     function advanceSearch()
     {
       var show        = $('#show').val();      
-      window.location = window.location.origin + '/laporan/{{ $start_date }}/{{ $end_date }}/' + show;
+      window.location = window.location.origin + '/admin/laporan/{{ $start_date }}/{{ $end_date }}/' + show;
     }
   </script>
 </body>
