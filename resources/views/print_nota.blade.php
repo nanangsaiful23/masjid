@@ -52,7 +52,7 @@
         </div>
         <br>
         <div class="totalnota" >
-            <span>Total :</span><span id="totalbayar">
+            <span>Total :<br></span><span id="totalbayar">
                 @if($totaluang!=0 && $totalberas!=0)
                     Uang Rp{{$totaluang}} <br> Beras {{$totalberas}} Kg
                 @elseif($totaluang!=0)
@@ -115,7 +115,7 @@
         </div>
         <br>
         <div class="totalnota" >
-            <span>Total :</span><span id="totalbayar">
+            <span>Total :<br></span><span id="totalbayar">
                 @if($totaluang!=0 && $totalberas!=0)
                     Uang  Rp{{$totaluang}} <br> Beras {{$totalberas}} Kg
                 @elseif($totaluang!=0)
