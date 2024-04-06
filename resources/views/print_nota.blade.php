@@ -104,9 +104,9 @@
                         <td>{{$detail->zakat->name}}</td>
                         <!-- <td style="text-align: center">{{$detail->zakat->type}}</td> -->
                         @if ($detail->zakat->type=="Uang")
-                        <td style="text-align: right;">{{number_format($detail->nominal,0,',','.')}}</td>
+                        <td style="text-align: right;">Rp {{number_format($detail->nominal,0,',','.')}}</td>
                         @elseif($detail->zakat->type=="Beras")
-                        <td style="text-align: right;">{{number_format($detail->nominal,1,',','.')}}</td>
+                        <td style="text-align: right;">{{number_format($detail->nominal,1,',','.')}} kg</td>
                         @endif
                     </tr>
                     @endforeach
@@ -116,15 +116,15 @@
         <br>
         <div class="totalnota" >
             <span>Total :</span><span id="totalbayar">
-                @if ($totaluang!=0 && $totalberas!=0)
+                @if($totaluang!=0 && $totalberas!=0)
                     Uang  Rp{{$totaluang}} <br> Beras {{$totalberas}} Kg
                 @elseif($totaluang!=0)
                     Uang  Rp{{$totaluang}}
                 @else
-                Beras {{$totalberas}} Kg
+                    Beras {{$totalberas}} Kg
                 @endif
                 </span>
-                <br>
+                <br><br>
                 {{ date('d F Y H:i:s', strtotime($transaction->created_at)) }} - ID: {{ $transaction->id }}
                 <br>
                 <br>
