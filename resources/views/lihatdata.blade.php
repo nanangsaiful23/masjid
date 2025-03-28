@@ -176,9 +176,9 @@
                                     <ol>                        
                                         @foreach($transaction->TransactionDetail as $detail)
                                             @if($detail->zakat->type == 'Beras')
-                                                <li>{{ $detail->muzakki->name . ' -> ' . $detail->nominal }} kg</li>
+                                                <li>{{ ucwords($detail->muzakki->name) . ' -> ' . $detail->nominal }} kg</li>
                                             @else
-                                                <li>{{ $detail->muzakki->name . ' -> Rp' . number_format($detail->nominal,2,'.',',') }}</li>
+                                                <li>{{ ucwords($detail->muzakki->name) . ' -> Rp' . number_format($detail->nominal,2,'.',',') }}</li>
                                             @endif
                                         @endforeach
                                     </ol>

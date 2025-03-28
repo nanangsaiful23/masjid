@@ -21,25 +21,19 @@
     <div class="print-data ">
         <div class="tabel">
             <table>
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">nama</th>
-                        <th scope="col">jenis</th>
-                        <!-- <th scope="col">jenis pembayaran</th> -->
-                        <th scope="col">nominal</th>
-                    </tr>
-                </thead>
                 <tbody id="data-table">
                     @php
                         $j=1
                     @endphp
                     @foreach ($transaction->TransactionDetail as $detail)
                     <tr>
-                        <th scope="row">{{$j++}}</th>
-                        <td>{{$detail->muzakki->name}}</td>
+                        <td style="font-size: 12px" scope="row">{{ $j++ }}.</td>
+                        <td style="font-size: 12px">{{ strtoupper($detail->muzakki->name) }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
                         <td>{{$detail->zakat->name}}</td>
-                        <!-- <td style="text-align: center">{{$detail->zakat->type}}</td> -->
                         @if ($detail->zakat->type=="Uang")
                         <td style="text-align: right;">Rp {{number_format($detail->nominal,0,',','.')}}</td>
                         @elseif($detail->zakat->type=="Beras")
@@ -84,25 +78,19 @@
     <div class="print-data ">
         <div class="tabel">
             <table>
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">nama</th>
-                        <th scope="col">jenis</th>
-                        <!-- <th scope="col">jenis pembayaran</th> -->
-                        <th scope="col">nominal</th>
-                    </tr>
-                </thead>
                 <tbody id="data-table">
                     @php
                     $j=1
                     @endphp
                     @foreach ($transaction->TransactionDetail as $detail)
                     <tr>
-                        <th scope="row">{{$j++}}</th>
-                        <td>{{$detail->muzakki->name}}</td>
+                        <td style="font-size: 12px" scope="row">{{ $j++ }}.</td>
+                        <td style="font-size: 12px">{{ strtoupper($detail->muzakki->name) }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
                         <td>{{$detail->zakat->name}}</td>
-                        <!-- <td style="text-align: center">{{$detail->zakat->type}}</td> -->
                         @if ($detail->zakat->type=="Uang")
                         <td style="text-align: right;">Rp {{number_format($detail->nominal,0,',','.')}}</td>
                         @elseif($detail->zakat->type=="Beras")
