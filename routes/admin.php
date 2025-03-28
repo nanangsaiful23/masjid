@@ -9,6 +9,7 @@ Route::get('/laporan/{start_date}/{end_date}/{pagination}', 'TransactionControll
 Route::get('/all-tweets-csv', "TransactionController@downloadmuzakki");
 Route::get('/transation', 'TransactionController@index');
 Route::get('/print/{transation_id}', 'TransactionController@print');
+Route::delete('/transaction/{transation_id}/delete', 'TransactionController@delete');
 Route::get('/transaction/export_excel/{start_date}/{end_date}', 'TransactionController@export_excel');
 
 // Route::get('/transaction/export_excel', 'TransactionController@export_excel');

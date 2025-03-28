@@ -160,6 +160,7 @@
                                 <th>Total Pembayaran Uang</th>
                                 <th>Detail</th>
                                 <th>Print</th>
+                                <th>Hapus</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -184,6 +185,16 @@
                                     </ol>
                                 </td>
                                 <td><a href="{{ url('/admin/print/' . $transaction->id) }}" class="btn" target="_blank()">Print</a></td>
+                                <td>
+                                    <button type="button" class="no-btn" data-toggle="modal" data-target="#modal-danger-{{$transaction->id}}" style="color: black;"><i class="fa fa-times red" aria-hidden="true"></i> Hapus</button>
+
+                                    @include('admin.delete-modal', ['id' => $transaction->id, 'data' => $transaction->created_at, 'formName' => 'delete-form-' . $transaction->id])
+
+                                    <form id="delete-form-{{$transaction->id}}" action="{{ url('admin/transaction/' . $transaction->id . '/delete') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                      </form>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

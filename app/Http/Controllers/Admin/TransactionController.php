@@ -71,8 +71,10 @@ class TransactionController extends Controller
     {
         $zakats = Zakat::leftjoin('transaction_details', function($join) use($start_date, $end_date) {
                             $join->on('transaction_details.zakat_id', '=', 'zakats.id')
+                                 ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
                                  ->whereDate('transaction_details.created_at', '>=', $start_date)
-                                 ->whereDate('transaction_details.created_at', '<=', $end_date); })
+                                 ->whereDate('transaction_details.created_at', '<=', $end_date)
+                                 ->where('transactions.deleted_at', null); })
                        ->select('zakats.name', DB::raw('SUM(transaction_details.nominal) as nominal'), 'zakats.type')
                        ->groupBy('zakats.name', 'zakats.type')
                        ->get();
@@ -169,7 +171,7 @@ class TransactionController extends Controller
 
         File::delete($path);
 
-        return redirect('/laporan/'. date("Y-m-d") . '/' . date("Y-m-d") . '/20');
+        return redirect('/admin/laporan/'. date("Y-m-d") . '/' . date("Y-m-d") . '/20');
     }
 
     public function print($transaction_id)
@@ -180,5 +182,13 @@ class TransactionController extends Controller
         $totalberas = number_format($transaction->total_rice,1,",",".");
 
         return view("print_nota", compact("transaction", "totaluang", "totalberas"));
+    }
+
+    public function delete($transaction_id)
+    {
+        $transaction = Transaction::find($transaction_id);
+        $transaction->delete();
+
+        return redirect('/admin/laporan/'. date("Y-m-d") . '/' . date("Y-m-d") . '/20');
     }
 }
